@@ -173,7 +173,7 @@ app.layout = html.Div(
             html.Div(
                 id='graph_line',
                 children = [
-                    dcc.Graph(id='bike-map', config={'scrollZoom': False}),
+                    dcc.Graph(id='bike-map'),# config={'scrollZoom': False}),
                     dcc.Graph(id='histo-km'),
                 ],
             ),
@@ -222,7 +222,7 @@ def update_output_div(input_value, data=DATA):
 )
 def update_output_map(input_value, data=DATA):
     df = DATA['dfs'][input_value]
-    df['color'] = DATA[input_value]['color']
+    color = DATA[input_value]['color']
 
     
     fig = go.Figure(go.Scattermapbox(
@@ -230,17 +230,23 @@ def update_output_map(input_value, data=DATA):
         lon = df['lon'].values,
         lat = df['lat'].values,
         # color = df['color'].values,
-        marker = {'size': 10}
-        ))
+        marker = {'size': 10},
+        line_color=color,
+        line_width=3,
+        text=df['city'],
+        hovertemplate="<extra></extra>🏙 %{text}",
+        ),
+        
+        )
 
     fig.update_layout(
-    margin ={'l':0,'t':0,'b':0,'r':0},
-    mapbox = {
-        "style":"stamen-terrain",
-        "zoom":5,
-        'center': {'lat': 48.8588, 'lon': 2.2770},
-        # 'zoom': 1
-        }
+        # hovermode="city",
+        margin ={'l':0,'t':0,'b':0,'r':0},
+        mapbox = {
+            "style":"stamen-terrain",
+            "zoom":6,
+            'center': {'lat': 50, 'lon': 2.2770},
+            }
         )
     return fig
 
